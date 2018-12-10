@@ -1,26 +1,22 @@
 package com.siot.iamportsdk;
 
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.util.EncodingUtils;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.util.Log;
 import com.jeongjuwon.iamport.UrlLoadingCallBack;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.util.EncodingUtils;
 
 public class NiceWebViewClient extends WebViewClient {
 
@@ -49,15 +45,19 @@ public class NiceWebViewClient extends WebViewClient {
 	public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
 	  // TODO: emit event
-	  Log.i("iamport", "NiceWebViewClient.shouldOverrideUrlLoading: " + url);
+		Log.i("iamport", "NiceWebViewClient.shouldOverrideUrlLoading: " + url);
 		mCallBack.shouldOverrideUrlLoadingCallBack(url);
 
+		Intent intent = null;
+
 		if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("javascript:")) {
-			Intent intent = null;
 
 			try {
 				/* START - BankPay(실시간계좌이체)에 대해서는 예외적으로 처리 */
 				if ( url.startsWith(PaymentScheme.BANKPAY) ) {
+
+					Log.i("iamport", "url.startsWith(PaymentScheme.BANKPAY " + url);
+
 					try {
 						String reqParam = makeBankPayData(url);
 
@@ -76,8 +76,41 @@ public class NiceWebViewClient extends WebViewClient {
 				intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME); //IntentURI처리
 				Uri uri = Uri.parse(intent.getDataString());
 
+				if (url.startsWith("intent")) { //chrome ���� ���
+
+					Log.i("iamport", "url.startsWith(intent) " + url);
+
+					if (activity.getPackageManager().resolveActivity(intent,0)==null){
+						String packagename=intent.getPackage();
+						if (packagename !=null){
+							Uri uriPackageName = Uri.parse("market://search?q=pname:"+packagename);
+							intent = new Intent(Intent.ACTION_VIEW,uriPackageName);
+							activity.startActivity(intent);
+							return true;
+						}
+					}
+
+					Log.i("iamport", "url.uriIntent  " + url);
+
+					Uri uriIntent = Uri.parse(intent.getDataString());
+					intent = new Intent(Intent.ACTION_VIEW, uriIntent);
+					activity.startActivity(intent);
+
+					return true;
+				} else { //�� ���
+
+					Log.i("iamport", "not intent " + url);
+
+					intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					activity.startActivity(intent);
+					//return true;
+				}
+
+				Log.i("iamport", "Intent.ACTION_VIEW, uri) " + url);
+
 				activity.startActivity(new Intent(Intent.ACTION_VIEW, uri));
 				return true;
+
 			} catch (URISyntaxException ex) {
 				return false;
 			} catch (ActivityNotFoundException e) {
