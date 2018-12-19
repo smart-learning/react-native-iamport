@@ -42,7 +42,10 @@ public class IAmPortModule extends ReactContextBaseJavaModule implements Activit
 
     Activity currentActivity = getCurrentActivity();
 
-    Log.i("iamport", "onNewIntent - Module Listener");
-    currentActivity.setIntent(intent);
+    try{
+      currentActivity.setIntent(intent);
+    }catch (Exception e){
+      e.printStackTrace();
+    }
   }
 }
