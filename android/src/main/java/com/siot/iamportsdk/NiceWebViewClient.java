@@ -133,6 +133,8 @@ public class NiceWebViewClient extends WebViewClient {
 		        }
 
 		        return false;
+			} catch (UnsupportedEncodingException ex2){
+				return false;
 			}
 		}
 
