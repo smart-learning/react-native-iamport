@@ -7,6 +7,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.jeongjuwon.iamport.UrlLoadingCallBack;
