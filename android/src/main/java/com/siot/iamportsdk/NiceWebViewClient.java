@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.util.Log;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.net.URLDecoder;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,11 +27,12 @@ public class NiceWebViewClient extends WebViewClient {
 	private Activity activity;
 	private WebView target;
 	private String BANK_TID = "";
+	private String NICE_BANK_URL = "https://web.nicepay.co.kr/smart/bank/payTrans.jsp";    // 계좌이체 거래 요청 URL(V2부터는 가변적일 수 있음)
+
 	UrlLoadingCallBack mCallBack;
 
 	final int RESCODE = 1;
 	final String NICE_URL = "https://web.nicepay.co.kr/smart/interfaceURL.jsp";			// NICEPAY SMART 요청 URL
-	final String NICE_BANK_URL = "https://web.nicepay.co.kr/smart/bank/payTrans.jsp";	// 계좌이체 거래 요청 URL
 	final String KTFC_PACKAGE = "com.kftc.bankpay.android";
 
 	public NiceWebViewClient(Activity activity, WebView target, UrlLoadingCallBack callBack) {
