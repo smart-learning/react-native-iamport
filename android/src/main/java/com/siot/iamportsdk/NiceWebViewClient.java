@@ -59,7 +59,6 @@ public class NiceWebViewClient extends WebViewClient {
 					Log.i("iamport", "url.startsWith(PaymentScheme.BANKPAY " + url);
 
 					try {
-						// 2019.06.18 아이엠포트 결제 프로세스 변경 테스트중 woohyuk 
 						// String reqParam = makeBankPayData(url);
 
 						// IMP.request_pay(param) 호출 시 param.niceMobileV2 : true인 경우에는 makeBankPayData(url) 대신 makeBankPayDataV2(url); 을 호출해주세요
